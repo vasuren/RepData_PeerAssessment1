@@ -120,6 +120,9 @@ print(Maxinterval)
 g <- sum(is.na(a$steps))
      for (k in 1:nrow(a)){
           m <- floor((k/288))
+################################################################
+#########   Imputing with Average Data of the interval #########
+################################################################
           if(is.na(a$steps[k])){
                if((k-(m*288))!=0){
           a$steps[k] <- Avgstpint[[(k-(m*288)),2]]
@@ -149,25 +152,22 @@ a[,4] <- weekdays(as.Date(a$date))
           if(a[l,4]== "Saturday")
           {
                a[l,5] <- "Weekend"
-               a[l,5] <- "Weekend"
-               
           }
           
           else if(a[l,4]== "Sunday")
           {
           a[l,5] <- "Weekend"
-          a[l,5] <- "Weekend"
           }
           else
           {
                     a[l,5] <-"Weekday"
-                    a[l,5] <- "Weekday"
                     }
      }
      colnames(a) <- c("steps","date","interval","day","type of day")
      a[,5] <- as.factor(a$`type of day`)
-     a[,5] <- as.factor(a$`type of day`)
-     a <<- a
+###############################################################
+#########   Using Lattice plot for panel plot of data #########
+###############################################################  
      library(lattice)
 xyplot(a$steps ~ a$interval | a$`type of day`,layout=c(1,2),xy.lines=FALSE,xlab = "Interval",ylab = "Average Steps", main = "Panel plot for average steps in weekdays and weekends")
 ```

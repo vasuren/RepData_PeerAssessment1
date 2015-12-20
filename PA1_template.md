@@ -7,15 +7,28 @@ keep_md: true
 
 
 ## Loading and preprocessing the data
-```{r readData, echo=TRUE}
+
+```r
 setwd("C:/Users/105046673/Documents/Coursera/Reproducible Research/Week 2/repdata_data_activity")
 a<-read.csv("activity.csv") # The activity file is read into a variable a
 summary(a)
 ```
 
+```
+##      steps                date          interval     
+##  Min.   :  0.00   2012-10-01:  288   Min.   :   0.0  
+##  1st Qu.:  0.00   2012-10-02:  288   1st Qu.: 588.8  
+##  Median :  0.00   2012-10-03:  288   Median :1177.5  
+##  Mean   : 37.38   2012-10-04:  288   Mean   :1177.5  
+##  3rd Qu.: 12.00   2012-10-05:  288   3rd Qu.:1766.2  
+##  Max.   :806.00   2012-10-06:  288   Max.   :2355.0  
+##  NA's   :2304     (Other)   :15840
+```
+
 
 ## What is mean total number of steps taken per day?
-```{r TotalSteps}
+
+```r
 fn <- function(activity=1){
 b <- split(a,a$date)
 dates <- c(levels(as.factor(a$date)))
@@ -51,13 +64,21 @@ print(MedianDailySteps)
 fn(activity = 1)
 ```
 
+![plot of chunk TotalSteps](figure/TotalSteps-1.png) 
+
+```
+## [1] 9354.23
+## [1] 10395
+```
+
 
 
 ## What is the average daily activity pattern?
 
 
 
-```{r TimeSeries}
+
+```r
 #################################################
 #######   Averaging steps from all days   #######
 #################################################
@@ -75,20 +96,27 @@ for(j in 1:length(e)){
 
 Avgstpint1 <- as.ts(Avgstpint)
 plot.ts(Avgstpint[,1],Avgstpint[,2],xlab = "Interval Number",ylab = "Average steps for all days", main = "Time Series plot of Average steps in intervals",xy.lines=T)
+```
 
+![plot of chunk TimeSeries](figure/TimeSeries-1.png) 
+
+```r
 #############################################################
 #########   Finding Interval with Max Average Steps #########
 #############################################################
 
 Maxinterval <- which.max(Avgstpint[,2])
 print(Maxinterval)
+```
 
+```
+## [1] 104
 ```
 
 
 ## Imputing missing values
-```{r Imputemissing}
 
+```r
 g <- sum(is.na(a$steps))
      for (k in 1:nrow(a)){
           m <- floor((k/288))
@@ -102,11 +130,18 @@ g <- sum(is.na(a$steps))
           }
      }
 fn(activity=1)
+```
 
+![plot of chunk Imputemissing](figure/Imputemissing-1.png) 
+
+```
+## [1] 10766.19
+## [1] 10766.19
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r Activitypatternswithweekdaysandweekends}
+
+```r
 a[,4] <- weekdays(as.Date(a$date))
      a[,4] <- weekdays(as.Date(a$date))
      for (l in 1:nrow(a))
@@ -136,4 +171,6 @@ a[,4] <- weekdays(as.Date(a$date))
      library(lattice)
 xyplot(a$steps ~ a$interval | a$`type of day`,layout=c(1,2),xy.lines=FALSE,xlab = "Interval",ylab = "Average Steps", main = "Panel plot for average steps in weekdays and weekends")
 ```
+
+![plot of chunk Activitypatternswithweekdaysandweekends](figure/Activitypatternswithweekdaysandweekends-1.png) 
 

@@ -7,15 +7,78 @@ output:
 
 
 ## Loading and preprocessing the data
-
+```{r readData, echo=TRUE}
+setwd("C:/Users/105046673/Documents/Coursera/Reproducible Research/Week 2/repdata_data_activity")
+a<-read.csv("activity.csv") # The activity file is read into a variable a
+summary(a)
+```
 
 
 ## What is mean total number of steps taken per day?
-
+```{r TotalSteps}
+     b <- split(a,a$date)
+     dates <- c(levels(as.factor(a$date)))
+     dailysteps <- data.frame(matrix(NA, nrow = 61, ncol = 2), stringsAsFactors = FALSE) # Initiating a dummy matrix
+     
+     #################################################
+     ########### Creating Dailysteps Data ############
+     #################################################
+     
+     for(i in 1:61){          
+          d <- data.frame(b[i])
+          colnames(d)<-c("steps","Date","Interval")
+          dailysteps[i, ] <- c(dates[i],sum(d$steps,na.rm=T))
+     }
+     
+     #################################################
+     ##############   Histogram Plot   ###############
+     #################################################
+     
+     dailysteps[,2] <- as.numeric(dailysteps[,2])
+     colnames(dailysteps) <- c("Date","Total_Steps")
+     hist(as.numeric(dailysteps$Total_Steps),xlab="Total_Steps",ylab="Frequency",main="Histogram plot of Total steps per day",breaks=10)
+     
+     #################################################
+     #########   Calculating Mean and Median   #######
+     #################################################
+     
+     MeanDailySteps <- mean(dailysteps[,2])
+     MedianDailySteps <- median(dailysteps[,2])
+     
+```
 
 
 ## What is the average daily activity pattern?
 
+     
+ 
+```{r TimeSeries}
+     #################################################
+     #######   Averaging steps from all days   #######
+     #################################################
+e <- split(a,a$interval)
+Avgstpint <- data.frame(matrix(NA, nrow = length(e), ncol = 2), stringsAsFactors = FALSE)
+     for(j in 1:length(e)){
+          f <- data.frame(e[j])
+          colnames(f) <- c("steps","date","interval")
+          Avgstpint[j,] <- c(j,mean(f$steps,na.rm=TRUE))
+     }
+     
+     #################################################
+     #########   Creating Time Series Plot   #########
+     #################################################
+
+Avgstpint <- as.ts(Avgstpint)
+plot.ts(Avgstpint[,1],Avgstpint[,2],xlab = "Interval Number",ylab = "Average steps for all days", main = "Time Series plot of Average steps in intervals",xy.lines=T)
+     
+     #############################################################
+     #########   Finding Interval with Max Average Steps #########
+     #############################################################
+
+Maxinterval <- which.max(Avgstpint[,2])
+print(Maxinterval)
+          
+```
 
 
 ## Imputing missing values
